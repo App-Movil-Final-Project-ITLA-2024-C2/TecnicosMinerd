@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:tecnicos_minerd/seeders/schoool_seeder.dart';
 import 'package:tecnicos_minerd/seeders/user_seeder.dart';
+import 'package:tecnicos_minerd/seeders/director_seeder.dart';
 
 import '../seeders/visittype_seeder.dart';
 
@@ -101,5 +102,6 @@ class DatabaseHelper {
     await UserSeeder.seed(db);
     await VisitTypeSeeder.seed(db);
     await SchoolSeeder.seed(db);
+    await DirectorSeeder.seed(db);
   }
 }
