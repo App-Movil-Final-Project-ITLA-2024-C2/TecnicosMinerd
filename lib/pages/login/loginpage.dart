@@ -84,7 +84,7 @@ class LoginPageState extends State<LoginPage> {
                   'https://static.wikia.nocookie.net/logopedia/images/c/c3/LogoEducacion2020.1.png',
                   height: 200,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _cedulaController,
                   decoration: const InputDecoration(

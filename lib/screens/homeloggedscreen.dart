@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../pages/logged/addvisitpage.dart';
 import '../pages/logged/demovideopage.dart';
 import '../pages/logged/director_search.dart';
 import '../pages/logged/horoscopepage.dart';
@@ -9,7 +10,6 @@ import '../pages/logged/visitsmaps.dart';
 import '../pages/logged/visittypes_search.dart';
 import 'homescreen.dart';
 import '../utils/navigation_util.dart';
-import '../pages/incidents/addincidentpage.dart';
 import '../widgets/homeloggedpage/bottommenu.dart';
 
 class HomeLoggedScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class HomeLoggedScreen extends StatefulWidget {
 class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
 
   Future<void> _addVisitPage() async {
-    NavigationUtils.navigateToPage(context, const AddIncidentPage());
+    NavigationUtils.navigateToPage(context, const AddVisitPage());
   }
 
   Future<void> _logout() async {
