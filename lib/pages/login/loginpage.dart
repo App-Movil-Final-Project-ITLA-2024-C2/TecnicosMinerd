@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../services/user_service.dart';
-import '../models/user_model.dart';
+import '../../screens/homeloggedscreen.dart';
+import '../../services/user_service.dart';
+import '../../models/user_model.dart';
+import '../../utils/navigation_util.dart'; 
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,18 +32,23 @@ class LoginPageState extends State<LoginPage> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('user', jsonEncode(user.toJson()));
 
-        if(mounted) {
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Login exitoso')));
+            content: Text('Login exitoso'),
+          ));
+          
+          // Navigate to HomeLoggedScreen
+          NavigationUtils.navigateAndReplace(context, const HomeLoggedScreen());
         }
       } else {
-        if(mounted){
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Login fallido')));
+            content: Text('Login fallido'),
+          ));
         }
       }
     } catch (error) {
-      if(mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Error: $error'),
         ));
@@ -82,7 +89,6 @@ class LoginPageState extends State<LoginPage> {
                   controller: _cedulaController,
                   decoration: const InputDecoration(
                     labelText: 'Cédula',
-                    border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
                 ),
@@ -91,7 +97,6 @@ class LoginPageState extends State<LoginPage> {
                   controller: _claveController,
                   decoration: const InputDecoration(
                     labelText: 'Clave',
-                    border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                 ),

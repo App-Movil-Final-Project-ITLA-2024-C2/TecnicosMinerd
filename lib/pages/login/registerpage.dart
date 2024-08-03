@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import '../models/registration_model.dart';
-import '../services/user_service.dart'; // Asegúrate de tener este modelo
+import '../../models/registration_model.dart';
+import '../../services/user_service.dart'; // Asegúrate de tener este modelo
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

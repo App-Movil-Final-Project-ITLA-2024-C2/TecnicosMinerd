@@ -3,14 +3,14 @@ import 'package:tecnicos_minerd/models/school_model.dart';
 import 'package:tecnicos_minerd/services/school_service.dart';
 
 
-class SearchSchoolScreen extends StatefulWidget {
-  const SearchSchoolScreen({super.key});
+class SearchSchoolPage extends StatefulWidget {
+  const SearchSchoolPage({super.key});
 
   @override
-  SearchSchoolScreenState createState() => SearchSchoolScreenState();
+  SearchSchoolPageState createState() => SearchSchoolPageState();
 }
 
-class SearchSchoolScreenState extends State<SearchSchoolScreen> {
+class SearchSchoolPageState extends State<SearchSchoolPage> {
   final _formKey = GlobalKey<FormState>();
   String _schoolCode = '';
   School? _school;

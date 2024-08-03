@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tecnicos_minerd/pages/registerpage.dart';
+import 'package:tecnicos_minerd/pages/login/registerpage.dart';
 
-import '../../pages/aboutpage.dart';
-import '../../pages/deletepage.dart';
-import '../../pages/loginpage.dart';
+import '../../pages/unlogged/aboutpage.dart';
+import '../../pages/unlogged/deletepage.dart';
+import '../../pages/login/loginpage.dart';
 import '../../utils/navigation_util.dart';
 
 class BottomMenu extends StatelessWidget {

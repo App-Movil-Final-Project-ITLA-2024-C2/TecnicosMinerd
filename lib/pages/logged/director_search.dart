@@ -3,14 +3,14 @@ import 'package:tecnicos_minerd/models/director_model.dart';
 import 'package:tecnicos_minerd/services/director_service.dart';
 
 
-class SearchDirectorScreen extends StatefulWidget {
-  const SearchDirectorScreen({super.key});
+class SearchDirectorPage extends StatefulWidget {
+  const SearchDirectorPage({super.key});
 
   @override
-  SearchDirectorScreenState createState() => SearchDirectorScreenState();
+  SearchDirectorPageState createState() => SearchDirectorPageState();
 }
 
-class SearchDirectorScreenState extends State<SearchDirectorScreen> {
+class SearchDirectorPageState extends State<SearchDirectorPage> {
   final _formKey = GlobalKey<FormState>();
   String _identification = '';
   Director? _director;

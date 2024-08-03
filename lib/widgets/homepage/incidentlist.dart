@@ -41,7 +41,13 @@ class IncidentListState extends State<IncidentList> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No hay incidencias'));
+              return const Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 25,),
+                  Center(child: Text('No hay incidentes')),
+                ],
+              );
             } else {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
