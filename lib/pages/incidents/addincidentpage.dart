@@ -125,6 +125,11 @@ class AddIncidentPageState extends State<AddIncidentPage> {
             padding: const EdgeInsets.all(5.0),
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 150,
+                  child: Image.network('https://static.wikia.nocookie.net/logopedia/images/c/c3/LogoEducacion2020.1.png'),
+                ),
+                const SizedBox(height: 10),
                 TextFormField(
                   controller: _titleController,
                   decoration: const InputDecoration(labelText: 'Título'),

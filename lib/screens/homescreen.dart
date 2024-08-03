@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tecnicos_minerd/pages/incidents/addincidentpage.dart';
-import 'package:tecnicos_minerd/widgets/incidentlist.dart';
+import 'package:tecnicos_minerd/widgets/homepage/incidentlist.dart';
 
 import '../utils/navigation_util.dart';
-import '../widgets/bottommenu.dart';
+import '../widgets/homepage/bottommenu.dart';
 
 class MyHomeScreen extends StatefulWidget {
   const MyHomeScreen({super.key});

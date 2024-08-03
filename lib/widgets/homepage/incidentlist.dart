@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tecnicos_minerd/services/incident_service.dart';
-import '../pages/incidents/incident_detail_page.dart';
+import '../../pages/incidents/incident_detail_page.dart';
 import 'package:tecnicos_minerd/models/incident_model.dart';
 
 class IncidentList extends StatefulWidget {

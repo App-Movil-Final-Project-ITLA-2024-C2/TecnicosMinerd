@@ -27,7 +27,12 @@ class MyApp extends StatelessWidget {
           foregroundColor: appBarTextColor,
           backgroundColor: appBarBgColor, 
           iconTheme: IconThemeData(color: accentColor),
+          titleTextStyle: const TextStyle(
+            fontFamily: 'Roboto', // Cambia por la fuente deseada
+            fontWeight: FontWeight.w300, // Estilo de fuente fina
+            fontSize: 18, // Tamaño de fuente opcional
           ),
+        ),
         iconTheme: IconThemeData(color: appBarTextColor), // Color de los íconos en general
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: appBarBgColor,

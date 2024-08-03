@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tecnicos_minerd/pages/registerpage.dart';
 
-import '../pages/aboutpage.dart';
-import '../pages/deletepage.dart';
-import '../pages/loginpage.dart';
-import '../utils/navigation_util.dart';
+import '../../pages/aboutpage.dart';
+import '../../pages/deletepage.dart';
+import '../../pages/loginpage.dart';
+import '../../utils/navigation_util.dart';
 
 class BottomMenu extends StatelessWidget {
   const BottomMenu({
@@ -40,10 +41,10 @@ class BottomMenu extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(
-              Icons.info,
+              Icons.person_add_alt_1,
             ),
             onPressed: () {
-              NavigationUtils.navigateToPage(context, const AboutPage());
+              NavigationUtils.navigateToPage(context, const RegisterPage());
             },
           ),
           IconButton(
