@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/homepage.dart';
+import 'screens/homescreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,8 +27,13 @@ class MyApp extends StatelessWidget {
           foregroundColor: appBarTextColor,
           backgroundColor: appBarBgColor, 
           iconTheme: IconThemeData(color: accentColor),
+          titleTextStyle: const TextStyle(
+            fontFamily: 'Roboto', // Cambia por la fuente deseada
+            fontWeight: FontWeight.w300, // Estilo de fuente fina
+            fontSize: 18, // Tamaño de fuente opcional
           ),
-        iconTheme: IconThemeData(color: appBarBgColor), // Color de los íconos en general
+        ),
+        iconTheme: IconThemeData(color: appBarTextColor), // Color de los íconos en general
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: appBarBgColor,
           foregroundColor: appBarTextColor,
@@ -36,12 +41,12 @@ class MyApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(appBarBgColor),
-            foregroundColor: WidgetStateProperty.all(bodytextColor),
+            foregroundColor: WidgetStateProperty.all(appBarTextColor),
           ),
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const MyHomeScreen(),
     );
   }
 }

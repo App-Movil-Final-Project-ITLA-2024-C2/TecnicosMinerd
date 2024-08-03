@@ -3,12 +3,14 @@ import 'package:tecnicos_minerd/models/director_model.dart';
 import 'package:tecnicos_minerd/services/director_service.dart';
 
 
-class SearchDirectorScreen extends StatefulWidget {
+class SearchDirectorPage extends StatefulWidget {
+  const SearchDirectorPage({super.key});
+
   @override
-  _SearchDirectorScreenState createState() => _SearchDirectorScreenState();
+  SearchDirectorPageState createState() => SearchDirectorPageState();
 }
 
-class _SearchDirectorScreenState extends State<SearchDirectorScreen> {
+class SearchDirectorPageState extends State<SearchDirectorPage> {
   final _formKey = GlobalKey<FormState>();
   String _identification = '';
   Director? _director;
@@ -43,15 +45,15 @@ class _SearchDirectorScreenState extends State<SearchDirectorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Buscar Director')),
+      appBar: AppBar(title: const Text('Buscar Director')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Cédula del Director'),
+                decoration: const InputDecoration(labelText: 'Cédula del Director'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingrese la cédula del director';
@@ -60,16 +62,16 @@ class _SearchDirectorScreenState extends State<SearchDirectorScreen> {
                 },
                 onSaved: (value) => _identification = value!,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _searchDirector,
-                child: Text('Buscar'),
+                child: const Text('Buscar'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               if (_director != null) ...[
                 Text('Nombre: ${_director!.firstName} ${_director!.lastName}'),

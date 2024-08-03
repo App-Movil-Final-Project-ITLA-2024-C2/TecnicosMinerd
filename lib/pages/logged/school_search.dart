@@ -3,12 +3,14 @@ import 'package:tecnicos_minerd/models/school_model.dart';
 import 'package:tecnicos_minerd/services/school_service.dart';
 
 
-class SearchSchoolScreen extends StatefulWidget {
+class SearchSchoolPage extends StatefulWidget {
+  const SearchSchoolPage({super.key});
+
   @override
-  _SearchSchoolScreenState createState() => _SearchSchoolScreenState();
+  SearchSchoolPageState createState() => SearchSchoolPageState();
 }
 
-class _SearchSchoolScreenState extends State<SearchSchoolScreen> {
+class SearchSchoolPageState extends State<SearchSchoolPage> {
   final _formKey = GlobalKey<FormState>();
   String _schoolCode = '';
   School? _school;
@@ -43,15 +45,15 @@ class _SearchSchoolScreenState extends State<SearchSchoolScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Buscar Escuela')),
+      appBar: AppBar(title: const Text('Buscar Escuela')),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Código de la Escuela'),
+                decoration: const InputDecoration(labelText: 'Código de la Escuela'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingrese el código de la escuela';
@@ -60,16 +62,16 @@ class _SearchSchoolScreenState extends State<SearchSchoolScreen> {
                 },
                 onSaved: (value) => _schoolCode = value!,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _searchSchool,
-                child: Text('Buscar'),
+                child: const Text('Buscar'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               if (_school != null) ...[
                 Text('Nombre: ${_school!.name}'),
