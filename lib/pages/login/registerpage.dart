@@ -69,6 +69,7 @@ class RegisterPageState extends State<RegisterPage> {
                 TextFormField(
                   controller: _cedulaController,
                   decoration: const InputDecoration(labelText: 'Cédula'),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese su cédula';

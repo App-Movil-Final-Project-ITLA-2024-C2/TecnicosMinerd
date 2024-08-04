@@ -1,7 +1,141 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-class AddVisitPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'package:record/record.dart';
+import 'dart:io';
+
+import '../../models/visit_model.dart';
+import '../../services/visit_service.dart';
+
+class AddVisitPage extends StatefulWidget {
   const AddVisitPage({super.key});
+
+  @override
+  State<AddVisitPage> createState() => _AddVisitPageState();
+}
+
+class _AddVisitPageState extends State<AddVisitPage> {
+  final _formKey = GlobalKey<FormState>();
+  final VisitService _visitService = VisitService();
+  final ImagePicker _picker = ImagePicker();
+  final Record _audioRecorder = Record();
+
+  final TextEditingController _cedulaDirectorController = TextEditingController();
+  final TextEditingController _codigoCentroController = TextEditingController();
+  final TextEditingController _motivoController = TextEditingController();
+  final TextEditingController _comentarioController = TextEditingController();
+  final TextEditingController _latitudController = TextEditingController();
+  final TextEditingController _longitudController = TextEditingController();
+
+  String? _fotoEvidenciaPath;
+  String? _notaVozPath;
+  String? _token;
+
+  bool _isRecording = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadToken();
+    _requestPermissions();
+  }
+
+  Future<void> _loadToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('user');
+    if (userJson != null) {
+      Map<String, dynamic> userMap = jsonDecode(userJson);
+      _token = userMap['token'];
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    final status = await Permission.microphone.request();
+    if (!status.isGranted) {
+      log('Permiso de grabación de audio denegado.');
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _fotoEvidenciaPath = pickedFile.path;
+      });
+    }
+  }
+
+  Future<void> _startRecording() async {
+    try {
+      final directory = await Directory.systemTemp.createTemp();
+      final path = '${directory.path}/audio.m4a';
+
+      // Inicio de la grabación
+      await _audioRecorder.start(
+        path: path,
+        encoder: AudioEncoder.aacLc,
+      );
+
+      setState(() {
+        _isRecording = true;
+        _notaVozPath = path;
+      });
+    } catch (e) {
+      log("Error al iniciar la grabación: $e");
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    try {
+      final path = await _audioRecorder.stop();
+      setState(() {
+        _isRecording = false;
+        _notaVozPath = path;
+      });
+    } catch (e) {
+      log("Error al detener la grabación: $e");
+    }
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate() && _token != null) {
+      Visit visit = Visit(
+        cedulaDirector: _cedulaDirectorController.text,
+        codigoCentro: _codigoCentroController.text,
+        motivo: _motivoController.text,
+        fotoEvidencia: _fotoEvidenciaPath!,
+        comentario: _comentarioController.text,
+        notaVoz: _notaVozPath!,
+        latitud: double.parse(_latitudController.text),
+        longitud: double.parse(_longitudController.text),
+        fecha: DateTime.now().toIso8601String().split('T').first,
+        hora: TimeOfDay.now().format(context),
+        token: _token!,
+      );
+
+      try {
+        bool success = await _visitService.registerVisit(visit);
+        if (success) {
+          if(mounted){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Visita registrada con éxito')),
+            );
+            Navigator.of(context).pop();
+          }
+        }
+      } catch (error) {
+        if(mounted){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $error')),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +143,145 @@ class AddVisitPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Añadir Visitas'),
       ),
-      body: const Center(
-        child: Text('Pagina de añadir Visitas'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 150,
+                  child: Image.network('https://static.wikia.nocookie.net/logopedia/images/c/c3/LogoEducacion2020.1.png'),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _cedulaDirectorController,
+                  decoration: const InputDecoration(labelText: 'Cedula Director'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese la cedula del director';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _codigoCentroController,
+                  decoration: const InputDecoration(labelText: 'Código Centro'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese el código del centro';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _motivoController,
+                  decoration: const InputDecoration(labelText: 'Motivo'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese el motivo';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _comentarioController,
+                  decoration: const InputDecoration(labelText: 'Comentario'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese un comentario';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _latitudController,
+                  decoration: const InputDecoration(labelText: 'Latitud'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese la latitud';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _longitudController,
+                  decoration: const InputDecoration(labelText: 'Longitud'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese la longitud';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _fotoEvidenciaPath == null
+                        ? const Text('Tome una Imagen.')
+                        : Image.file(File(_fotoEvidenciaPath!), width: 100),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue[500],
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.camera_alt, color: Colors.white),
+                        onPressed: _pickImage,
+                        tooltip: 'Tomar una foto',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _isRecording
+                        ? const Text('Grabando audio....')
+                        : _notaVozPath == null
+                            ? const Text('No ha grabado audio.')
+                            : const Text('El audio ha sido grabado.'),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue[500],
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          _isRecording ? Icons.stop : Icons.mic,
+                          color: Colors.white,
+                        ),
+                        onPressed: _isRecording ? _stopRecording : _startRecording,
+                        tooltip: _isRecording ? 'Detener grabación' : 'Grabar audio',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _submitForm,
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text('Registrar Visita'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
