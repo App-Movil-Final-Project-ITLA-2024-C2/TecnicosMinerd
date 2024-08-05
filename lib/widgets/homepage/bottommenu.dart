@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tecnicos_minerd/models/about_model.dart';
 import 'package:tecnicos_minerd/pages/login/registerpage.dart';
 
 import '../../pages/unlogged/aboutpage.dart';
@@ -36,7 +37,7 @@ class BottomMenu extends StatelessWidget {
               Icons.info,
             ),
             onPressed: () {
-              NavigationUtils.navigateToPage(context, const AboutPage());
+              NavigationUtils.navigateToPage(context, AboutPage(about: tecnico));
             },
           ),
           IconButton(

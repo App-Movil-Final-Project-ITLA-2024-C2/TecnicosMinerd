@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tecnicos_minerd/models/school_model.dart';
-import 'package:tecnicos_minerd/services/school_service.dart';
-
 
 class SearchSchoolPage extends StatefulWidget {
   const SearchSchoolPage({super.key});
@@ -12,18 +9,18 @@ class SearchSchoolPage extends StatefulWidget {
 
 class SearchSchoolPageState extends State<SearchSchoolPage> {
   final _formKey = GlobalKey<FormState>();
-  String _schoolCode = '';
-  School? _school;
+  //String _schoolCode = '';
+  //School? _school;
   String? _errorMessage;
-  final SchoolService _schoolService = SchoolService();
+  //final SchoolService _schoolService = SchoolService();
 
   void _searchSchool() async {
     setState(() {
-      _school = null;
+      //_school = null;
       _errorMessage = null;
     });
 
-    if (_formKey.currentState!.validate()) {
+    /*if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
         final school = await _schoolService.getSchoolByCode(_schoolCode);
@@ -39,7 +36,7 @@ class SearchSchoolPageState extends State<SearchSchoolPage> {
           _errorMessage = 'Error al buscar la escuela: ${e.toString()}';
         });
       }
-    }
+    }*/
   }
 
   @override
@@ -60,7 +57,7 @@ class SearchSchoolPageState extends State<SearchSchoolPage> {
                   }
                   return null;
                 },
-                onSaved: (value) => _schoolCode = value!,
+                //onSaved: (value) => _schoolCode = value!,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -73,11 +70,11 @@ class SearchSchoolPageState extends State<SearchSchoolPage> {
                   _errorMessage!,
                   style: const TextStyle(color: Colors.red),
                 ),
-              if (_school != null) ...[
+              /*if (_school != null) ...[
                 Text('Nombre: ${_school!.name}'),
                 Text('Dirección: ${_school!.address}'),
                 Text('Teléfono: ${_school!.phoneNumber}'),
-              ]
+              ]*/
             ],
           ),
         ),

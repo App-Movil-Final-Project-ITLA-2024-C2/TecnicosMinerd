@@ -1,59 +1,62 @@
 class Visit {
-  int? id;
-  String directorId;
-  String schoolCode;
-  String visitReason;
-  String? photo;
-  String? comment;
-  String? audio;
-  double latitude;
-  double longitude;
-  String date;
-  String time;
+  final String? situacionId; // Opcional para el detalle de visitas
+  final String cedulaDirector;
+  final String codigoCentro;
+  final String motivo;
+  final String fotoEvidencia; // Puedes dejarlo como vacío si no se proporciona en el JSON
+  final String comentario;    // Puedes dejarlo como vacío si no se proporciona en el JSON
+  final String notaVoz;       // Puedes dejarlo como vacío si no se proporciona en el JSON
+  final String latitud;
+  final String longitud;
+  final String fecha;
+  final String hora;
+  final String token;
 
   Visit({
-    this.id,
-    required this.directorId,
-    required this.schoolCode,
-    required this.visitReason,
-    this.photo,
-    this.comment,
-    this.audio,
-    required this.latitude,
-    required this.longitude,
-    required this.date,
-    required this.time,
+    this.situacionId,
+    required this.cedulaDirector,
+    required this.codigoCentro,
+    required this.motivo,
+    this.fotoEvidencia = '',
+    this.comentario = '',
+    this.notaVoz = '',
+    required this.latitud,
+    required this.longitud,
+    required this.fecha,
+    required this.hora,
+    required this.token
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'director_id': directorId,
-      'school_code': schoolCode,
-      'visit_reason': visitReason,
-      'photo': photo,
-      'comment': comment,
-      'audio': audio,
-      'latitude': latitude,
-      'longitude': longitude,
-      'date': date,
-      'time': time,
-    };
+  factory Visit.fromJson(Map<String, dynamic> json) {
+    return Visit(
+      situacionId: json['id'] ?? '',
+      cedulaDirector: json['cedula_director'] ?? '',
+      codigoCentro: json['codigo_centro'] ?? '',
+      motivo: json['motivo'] ?? '',
+      fotoEvidencia: json['foto_evidencia'] ?? '',
+      comentario: json['comentario'] ?? '',
+      notaVoz: json['nota_voz'] ?? '',
+      latitud: json['latitud'] ?? '',
+      longitud: json['longitud'] ?? '',
+      fecha: json['fecha'] ?? '',
+      hora: json['hora'] ?? '',
+      token: json['token'] ?? '',
+    );
   }
 
-  factory Visit.fromMap(Map<String, dynamic> map) {
-    return Visit(
-      id: map['id'],
-      directorId: map['director_id'],
-      schoolCode: map['school_code'],
-      visitReason: map['visit_reason'],
-      photo: map['photo'],
-      comment: map['comment'],
-      audio: map['audio'],
-      latitude: map['latitude'],
-      longitude: map['longitude'],
-      date: map['date'],
-      time: map['time'],
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'cedula_director': cedulaDirector,
+      'codigo_centro': codigoCentro,
+      'motivo': motivo,
+      'foto_evidencia': fotoEvidencia,
+      'comentario': comentario,
+      'nota_voz': notaVoz,
+      'latitud': latitud,
+      'longitud': longitud,
+      'fecha': fecha,
+      'hora': hora,
+      'token': token
+    };
   }
 }
