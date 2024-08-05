@@ -6,7 +6,7 @@ class VisitService {
   final String _baseUrl = 'https://adamix.net/minerd/def';
 
   Future<bool> registerVisit(Visit visit) async {
-    final url = Uri.parse('$_baseUrl/registrar_visita.php').replace(queryParameters: visit.toJson());
+    final url = Uri.parse('https://adamix.net/minerd/minerd/registrar_visita.php').replace(queryParameters: visit.toJson());
 
     try {
       final response = await http.get(url, headers: {'Content-Type': 'application/json'});
@@ -50,7 +50,7 @@ class VisitService {
     }
   }
 
-  Future<Visit> getVisitDetail(String token, int situacionId) async {
+  Future<Visit> getVisitDetail(String token, String situacionId) async {
     final url = Uri.parse('$_baseUrl/situacion.php').replace(queryParameters: {
       'token': token,
       'situacion_id': situacionId.toString(),

@@ -12,7 +12,9 @@ import '../../models/visit_model.dart';
 import '../../services/visit_service.dart';
 
 class AddVisitPage extends StatefulWidget {
-  const AddVisitPage({super.key});
+  final VoidCallback? onVisitAdded;
+
+  const AddVisitPage({super.key, this.onVisitAdded});
 
   @override
   State<AddVisitPage> createState() => _AddVisitPageState();
@@ -110,8 +112,8 @@ class _AddVisitPageState extends State<AddVisitPage> {
         fotoEvidencia: _fotoEvidenciaPath!,
         comentario: _comentarioController.text,
         notaVoz: _notaVozPath!,
-        latitud: double.parse(_latitudController.text),
-        longitud: double.parse(_longitudController.text),
+        latitud: _latitudController.text,
+        longitud: _longitudController.text,
         fecha: DateTime.now().toIso8601String().split('T').first,
         hora: TimeOfDay.now().format(context),
         token: _token!,
@@ -120,15 +122,16 @@ class _AddVisitPageState extends State<AddVisitPage> {
       try {
         bool success = await _visitService.registerVisit(visit);
         if (success) {
-          if(mounted){
+          if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Visita registrada con éxito')),
             );
             Navigator.of(context).pop();
+            widget.onVisitAdded?.call(); // Llama al callback
           }
         }
       } catch (error) {
-        if(mounted){
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: $error')),
           );

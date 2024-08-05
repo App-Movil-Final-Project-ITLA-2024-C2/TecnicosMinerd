@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class NavigationUtils {
   // Método para navegar a una página dada
-  static void navigateToPage(BuildContext context, Widget page) {
-    Navigator.push(
+  static Future<void> navigateToPage(BuildContext context, Widget page) async{
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => page),
     );
