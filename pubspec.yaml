@@ -84,6 +84,18 @@ flutter:
   assets:
     - assets/images/home/
     - assets/icon/icon.png
+    - assets/images/horoscope/aquarius.png
+    - assets/images/horoscope/aries.png
+    - assets/images/horoscope/cancer.png
+    - assets/images/horoscope/capricorn.png
+    - assets/images/horoscope/gemini.png
+    - assets/images/horoscope/leo.png
+    - assets/images/horoscope/libra.png
+    - assets/images/horoscope/pisces.png
+    - assets/images/horoscope/sagittarius.png
+    - assets/images/horoscope/scorpio.png
+    - assets/images/horoscope/taurus.png
+    - assets/images/horoscope/virgo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

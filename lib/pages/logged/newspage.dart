@@ -5,33 +5,8 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tecnicos_minerd/models/news_model.dart';
 
-// Modelo para las noticias
-class News {
-  final String title;
-  final String? image;
-  final String description;
-  final String content;
-  final String link;
-
-  News({
-    required this.title,
-    this.image,
-    required this.description,
-    required this.content,
-    required this.link,
-  });
-
-  factory News.fromJson(Map<String, dynamic> json) {
-    return News(
-      title: json['title'] ?? 'No Title',
-      image: json['image'],
-      description: json['description'] ?? 'No Description',
-      content: json['content'] ?? 'No Content',
-      link: json['link'] ?? '',
-    );
-  }
-}
 
 // Decodificar texto HTML
 String decodeHtml(String htmlString) {
@@ -40,7 +15,7 @@ String decodeHtml(String htmlString) {
   return unescape.convert(htmlString);
 }
 
-// Utiliza esta función para procesar el texto en tu aplicación
+// función para procesar el texto 
 String processText(String text) {
   return decodeHtml(text);
 }
@@ -191,7 +166,7 @@ class _NewsPageState extends State<NewsPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ListView.separated(
-              itemCount: 5, // Number of shimmer items to show
+              itemCount: 5, 
               itemBuilder: (context, index) => const ShimmerItem(),
               separatorBuilder: (context, index) => const Divider(
                 color: Colors.grey,
@@ -243,7 +218,7 @@ class _NewsPageState extends State<NewsPage> {
                         const SizedBox(height: 8.0),
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 48.0), // Ajusta el padding aquí
+                              left: 48.0), 
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
