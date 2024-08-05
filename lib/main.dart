@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     var appBarTextColor = Colors.white;
     var bodytextColor = Colors.black;
     var bodybgColor = Colors.white;
-    var accentColor = Colors.red[900];
+    var accentColor = Colors.red[900];  
 
     return MaterialApp(
       title: 'Tecnicos MINERD',
