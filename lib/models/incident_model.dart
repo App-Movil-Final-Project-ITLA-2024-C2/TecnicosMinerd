@@ -28,9 +28,9 @@ class Incident {
       'schoolName': schoolName,
       'regional': regional,
       'district': district,
-      'fecha': date,
-      'descripcion': description,
-      'foto': photo,
+      'date': date,
+      'description': description,
+      'photo': photo,
       'audio': audio,
     };
   }
