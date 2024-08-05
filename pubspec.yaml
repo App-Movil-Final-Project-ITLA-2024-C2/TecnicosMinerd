@@ -47,6 +47,10 @@ dependencies:
   http: ^1.2.2
   wave: ^0.2.2
   shared_preferences: ^2.3.1
+  url_launcher: ^6.3.0
+  html_unescape: ^2.0.0
+  shimmer: ^3.0.0
+
 
 dev_dependencies:
   flutter_test:
