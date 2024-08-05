@@ -16,9 +16,8 @@ class AboutScreen extends StatelessWidget {
   final String randomReflexion;
 
   // Constructor
-  AboutScreen({Key? key, required this.about})
-      : randomReflexion = reflexiones[Random().nextInt(reflexiones.length)],
-        super(key: key);
+  AboutScreen({super.key, required this.about})
+      : randomReflexion = reflexiones[Random().nextInt(reflexiones.length)];
 
   @override
   Widget build(BuildContext context) {

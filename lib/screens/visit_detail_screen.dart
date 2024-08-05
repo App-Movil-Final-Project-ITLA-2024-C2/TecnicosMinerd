@@ -4,14 +4,14 @@ import '../models/visit_model.dart';
 class VisitDetailPage extends StatelessWidget {
   final Visit visit;
 
-  VisitDetailPage({required this.visit});
+  const VisitDetailPage({super.key, required this.visit});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[900], // Color azul para el AppBar
-        title: Text(
+        title: const Text(
           'Detalles de la Visita',
           style: TextStyle(color: Colors.white), // Letras blancas
         ),

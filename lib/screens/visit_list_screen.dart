@@ -30,6 +30,8 @@ class VisitList extends StatelessWidget {
     ),
   ];
 
+  VisitList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

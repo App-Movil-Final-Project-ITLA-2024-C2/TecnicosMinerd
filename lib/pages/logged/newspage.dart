@@ -50,12 +50,12 @@ class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
 
   @override
-  _NewsPageState createState() => _NewsPageState();
+  NewsPageState createState() => NewsPageState();
 }
 
 // Esqueleto Loading
 class ShimmerItem extends StatelessWidget {
-  const ShimmerItem({Key? key}) : super(key: key);
+  const ShimmerItem({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class ShimmerItem extends StatelessWidget {
                 child: Container(
                   width: 120,
                   height: 120,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape:
                         BoxShape.circle, // Hace que el contenedor sea circular
                     color: Colors.white,
@@ -148,7 +148,7 @@ class ShimmerItem extends StatelessWidget {
   }
 }
 
-class _NewsPageState extends State<NewsPage> {
+class NewsPageState extends State<NewsPage> {
   late Future<List<News>> futureNews;
   final Random random = Random();
 
@@ -170,7 +170,6 @@ class _NewsPageState extends State<NewsPage> {
         throw Exception('Failed to load news: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching news: $e');
       throw Exception('Failed to load news: $e');
     }
   }
@@ -384,7 +383,7 @@ class NewsDetailPage extends StatelessWidget {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: NewsPage(),
   ));
 }
