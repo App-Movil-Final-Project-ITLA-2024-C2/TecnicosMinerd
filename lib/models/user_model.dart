@@ -1,27 +1,43 @@
 class User {
-  int? id;
-  String username;
-  String password;
+  final String id;
+  final String nombre;
+  final String apellido;
+  final String correo;
+  final String telefono;
+  final String fechaNacimiento;
+  final String token;
 
   User({
-    this.id,
-    required this.username,
-    required this.password,
+    required this.id,
+    required this.nombre,
+    required this.apellido,
+    required this.correo,
+    required this.telefono,
+    required this.fechaNacimiento,
+    required this.token,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'username': username,
-      'password': password,
-    };
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      nombre: json['nombre'],
+      apellido: json['apellido'],
+      correo: json['correo'],
+      telefono: json['telefono'],
+      fechaNacimiento: json['fecha_nacimiento'],
+      token: json['token'],
+    );
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
-      id: map['id'],
-      username: map['username'],
-      password: map['password'],
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nombre': nombre,
+      'apellido': apellido,
+      'correo': correo,
+      'telefono': telefono,
+      'fecha_nacimiento': fechaNacimiento,
+      'token': token,
+    };
   }
 }

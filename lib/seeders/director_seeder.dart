@@ -4,7 +4,6 @@ class DirectorSeeder {
   static Future<void> seed(Database db) async {
     List<Map<String, dynamic>> directors = [
       {
-        'id': '',
         'identification': '01',
         'photo': 'https://example.com/photo1.jpg',
         'first_name': 'Juan',
@@ -14,7 +13,6 @@ class DirectorSeeder {
         'phone_number': '809-345-6789',
       },
       {
-        'id': '',
         'identification': '02',
         'photo': 'https://example.com/photo2.jpg',
         'first_name': 'Ana',

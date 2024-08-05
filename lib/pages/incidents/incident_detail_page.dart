@@ -3,10 +3,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'dart:io';
 import 'package:tecnicos_minerd/models/incident_model.dart';
 
-class IncidentDetailScreen extends StatelessWidget {
+class IncidentDetailPage extends StatelessWidget {
   final Incident incident;
 
-  IncidentDetailScreen({required this.incident});
+  const IncidentDetailPage({super.key, required this.incident});
 
   @override
   Widget build(BuildContext context) {
