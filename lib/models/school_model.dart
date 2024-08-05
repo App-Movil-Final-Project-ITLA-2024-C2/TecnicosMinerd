@@ -1,35 +1,31 @@
 class School {
-  int? id;
-  String code;
-  String name;
-  String address;
-  String phoneNumber;
+  final String? idx;
+  final String? codigo;
+  final String? nombre;
+  final String? coordenadas;
+  final String? distrito;
+  final String? regional;
+  final String? dMunicipal;
 
   School({
-    this.id,
-    required this.code,
-    required this.name,
-    required this.address,
-    required this.phoneNumber,
+    this.idx,
+    this.codigo,
+    this.nombre,
+    this.coordenadas,
+    this.distrito,
+    this.regional,
+    this.dMunicipal,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'code': code,
-      'name': name,
-      'address': address,
-      'phone_number': phoneNumber,
-    };
-  }
-
-  factory School.fromMap(Map<String, dynamic> map) {
+  factory School.fromJson(Map<String, dynamic> json) {
     return School(
-      id: map['id'],
-      code: map['code'],
-      name: map['name'],
-      address: map['address'],
-      phoneNumber: map['phone_number'],
+      idx: json['idx']?.toString(),
+      codigo: json['codigo']?.toString(),
+      nombre: json['nombre']?.toString(),
+      coordenadas: json['coordenadas']?.toString(),
+      distrito: json['distrito']?.toString(),
+      regional: json['regional']?.toString(),
+      dMunicipal: json['d_dmunicipal']?.toString(),
     );
   }
 }
