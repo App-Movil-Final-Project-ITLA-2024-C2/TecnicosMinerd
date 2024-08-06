@@ -40,7 +40,7 @@ class VisitsMapPageState extends State<VisitsMapPage> {
               position: position,
               infoWindow: InfoWindow(
                 title: visit.motivo,
-                snippet: visit.comentario,
+                snippet: '${visit.fecha},  ${visit.hora}',
                 onTap: () => _showVisitDetails(visit),
               ),
             ),
@@ -48,24 +48,45 @@ class VisitsMapPageState extends State<VisitsMapPage> {
         }
       });
     } catch (e) {
-      // Manejo de errores
     }
   }
 
-  void _showVisitDetails(Visit visit) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(visit.motivo),
-        content: Text('Comentario: ${visit.comentario}'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+  void _showVisitDetails(Visit visit) async {
+    try {
+      final visitService = VisitService();
+      final visitDetails = await visitService.getVisitDetail(widget.token, visit.situacionId.toString());
+      if(mounted){
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(visitDetails.motivo),
+            content: Text(visitDetails.comentario),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+      }
+    } catch (e) {
+      if(mounted){
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('No se pudo obtener los detalles de la visita.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   @override
