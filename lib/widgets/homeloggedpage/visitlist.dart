@@ -79,7 +79,7 @@ class VisitListState extends State<VisitList> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.all(8.0),
+                  contentPadding: const EdgeInsets.all(2.0),
                   leading: CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.blue[100],

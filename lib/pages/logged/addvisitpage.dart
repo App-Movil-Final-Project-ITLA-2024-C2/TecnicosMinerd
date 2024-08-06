@@ -174,6 +174,7 @@ class _AddVisitPageState extends State<AddVisitPage> {
                 TextFormField(
                   controller: _codigoCentroController,
                   decoration: const InputDecoration(labelText: 'Código Centro'),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese el código del centro';
@@ -207,6 +208,7 @@ class _AddVisitPageState extends State<AddVisitPage> {
                 TextFormField(
                   controller: _latitudController,
                   decoration: const InputDecoration(labelText: 'Latitud'),
+                  keyboardType: TextInputType.number,                  
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese la latitud';
@@ -218,6 +220,7 @@ class _AddVisitPageState extends State<AddVisitPage> {
                 TextFormField(
                   controller: _longitudController,
                   decoration: const InputDecoration(labelText: 'Longitud'),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese la longitud';

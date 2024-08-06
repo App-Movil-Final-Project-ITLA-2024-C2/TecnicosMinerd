@@ -1,11 +1,11 @@
 class Visit {
-  final String? situacionId; // Opcional para el detalle de visitas
+  final String? situacionId; 
   final String cedulaDirector;
   final String codigoCentro;
   final String motivo;
-  final String fotoEvidencia; // Puedes dejarlo como vacío si no se proporciona en el JSON
-  final String comentario;    // Puedes dejarlo como vacío si no se proporciona en el JSON
-  final String notaVoz;       // Puedes dejarlo como vacío si no se proporciona en el JSON
+  final String fotoEvidencia;
+  final String comentario;    
+  final String notaVoz;
   final String latitud;
   final String longitud;
   final String fecha;

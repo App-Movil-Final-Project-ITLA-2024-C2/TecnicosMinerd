@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:geolocator/geolocator.dart';
 
 class LocationHelper {
@@ -7,7 +9,7 @@ class LocationHelper {
         desiredAccuracy: LocationAccuracy.high,
       );
     } catch (e) {
-      print('Exception caught in LocationHelper: $e');
+      log('Exception caught in LocationHelper: $e');
       throw Exception('Failed to get location: $e');
     }
   }

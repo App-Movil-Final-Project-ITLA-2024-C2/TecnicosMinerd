@@ -7,10 +7,10 @@ class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
 
   @override
-  _WeatherPageState createState() => _WeatherPageState();
+  WeatherPageState createState() => WeatherPageState();
 }
 
-class _WeatherPageState extends State<WeatherPage> {
+class WeatherPageState extends State<WeatherPage> {
   String _weatherInfo = 'Cargando clima...';
   bool _isLoading = true;
   String _icon = '';

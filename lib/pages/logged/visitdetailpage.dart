@@ -1,31 +1,73 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:audioplayers/audioplayers.dart';
 import '../../models/visit_model.dart';
 import '../../services/visit_service.dart';
+import 'dart:io';
 
-class VisitDetailPage extends StatelessWidget {
+import '../../utils/get_token_util.dart';
+import '../../widgets/mapwidget.dart';
+
+class VisitDetailPage extends StatefulWidget {
   final String situacionId;
-  final VisitService visitService = VisitService(); // Instancia del servicio
 
-   VisitDetailPage({super.key, required this.situacionId});
+  const VisitDetailPage({super.key, required this.situacionId});
 
-  Future<String?> _loadToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userJson = prefs.getString('user');
-    if (userJson != null) {
-      Map<String, dynamic> userMap = jsonDecode(userJson);
-      return userMap['token'];
+  @override
+  State<VisitDetailPage> createState() => _VisitDetailPageState();
+}
+
+class _VisitDetailPageState extends State<VisitDetailPage> {
+  final VisitService visitService = VisitService();
+  final AudioPlayer _player = AudioPlayer();
+  bool _isPlaying = false;
+
+  Future<void> _playPauseAudio(String audioPath) async {
+    final exists = await _fileExists(audioPath);
+    if (!exists) {
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('El archivo de audio no existe'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+        return;
+      }
     }
-    return null;
+
+    try {
+      if (_isPlaying) {
+        await _player.pause();
+      } else {
+        await _player.setSourceDeviceFile(audioPath);
+        await _player.resume();
+      }
+
+      setState(() {
+        _isPlaying = !_isPlaying;
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error al reproducir el audio'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<bool> _fileExists(String path) async {
+    return File(path).exists();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
-      future: _loadToken(),
+      future: TokenUtil.getToken(),
       builder: (context, tokenSnapshot) {
         if (tokenSnapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -46,7 +88,7 @@ class VisitDetailPage extends StatelessWidget {
         } else {
           final token = tokenSnapshot.data!;
           return FutureBuilder<Visit>(
-            future: visitService.getVisitDetail(token, situacionId),
+            future: visitService.getVisitDetail(token, widget.situacionId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Scaffold(
@@ -85,38 +127,21 @@ class VisitDetailPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            visit.motivo,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildDetailRow('Director ID', visit.cedulaDirector),
-                          _buildDetailRow('Código de la Escuela', visit.codigoCentro),
-                          _buildDetailRow('Fecha', visit.fecha),
-                          _buildDetailRow('Hora', visit.hora),
-                          if (visit.fotoEvidencia.isNotEmpty) ...[
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Foto:',
-                              style: TextStyle(
-                                fontSize: 18,
+                          Center(
+                            child: Text(
+                              visit.motivo,
+                              style: const TextStyle(
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            /*ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                visit.fotoEvidencia, // Usa Image.network para cargar imágenes desde la URL
-                                fit: BoxFit.cover,
-                              ),
-                            ),*/
-                          ],
+                          ),
+                          const SizedBox(height: 15),
+                          _buildDetailRow('Director ID', visit.cedulaDirector),
+                          _buildDetailRow('Escuela ID', visit.codigoCentro),
+                          _buildDetailRow('Fecha y Hora', '${visit.fecha}, ${visit.hora}'),
                           if (visit.comentario.isNotEmpty) ...[
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 5),
                             const Text(
                               'Comentario:',
                               style: TextStyle(
@@ -134,40 +159,71 @@ class VisitDetailPage extends StatelessWidget {
                               child: Text(visit.comentario),
                             ),
                           ],
-                          if (visit.notaVoz.isNotEmpty) ...[
-                            const SizedBox(height: 20),
-                            const Text(
-                              'Audio:',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            /*
-                            Container(
-                              padding: const EdgeInsets.all(12.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.audiotrack),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    visit.notaVoz,
-                                    style: const TextStyle(
-                                      overflow: TextOverflow.fade
+                          if (visit.fotoEvidencia.isNotEmpty)
+                            FutureBuilder<bool>(
+                              future: _fileExists(visit.fotoEvidencia),
+                              builder: (context, fileSnapshot) {
+                                if (fileSnapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                } else if (fileSnapshot.hasError || !fileSnapshot.data!) {
+                                  return const SizedBox();
+                                } else {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      const Text(
+                                        'Evidencia:',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      const SizedBox(height: 10),
+                                      Center(
+                                        child: Image.file(
+                                          File(visit.fotoEvidencia),
+                                          width: double.infinity,
+                                          height: 200,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          if (visit.notaVoz.isNotEmpty)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 20),
+                                Center(
+                                  child: ElevatedButton.icon(
+                                    icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+                                    label: Text(_isPlaying ? 'Pausar Audio' : 'Reproducir Audio'),
+                                    onPressed: () => _playPauseAudio(visit.notaVoz),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[900],
+                                      minimumSize: const Size(double.infinity, 50), // Ancho máximo
                                     ),
-                                ],
-                              ),
-                            ),*/
-                          ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           const SizedBox(height: 20),
-                          _buildDetailRow('Latitud', visit.latitud),
-                          _buildDetailRow('Longitud', visit.longitud),
+                          const Text(
+                            'Ubicación:',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          MapWidget(
+                            latitude: double.tryParse(visit.latitud) ?? 0,
+                            longitude: double.tryParse(visit.longitud) ?? 0,
+                          ),
                         ],
                       ),
                     ),
@@ -185,18 +241,19 @@ class VisitDetailPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '$label: ',
             style: const TextStyle(
-              fontSize: 18,
               fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
         ],
