@@ -87,6 +87,8 @@ class VisitListState extends State<VisitList> {
                   ),
                   title: Text(
                     visit.motivo,
+                    maxLines: 1,
+                    overflow: TextOverflow.visible,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

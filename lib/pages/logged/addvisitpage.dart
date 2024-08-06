@@ -9,7 +9,9 @@ import 'package:record/record.dart';
 import 'dart:io';
 
 import '../../models/visit_model.dart';
+import '../../models/visittype_model.dart'; // Importa el modelo de VisitType
 import '../../services/visit_service.dart';
+import '../../services/visittype_service.dart'; // Importa el servicio de VisitType
 
 class AddVisitPage extends StatefulWidget {
   final VoidCallback? onVisitAdded;
@@ -28,7 +30,6 @@ class _AddVisitPageState extends State<AddVisitPage> {
 
   final TextEditingController _cedulaDirectorController = TextEditingController();
   final TextEditingController _codigoCentroController = TextEditingController();
-  final TextEditingController _motivoController = TextEditingController();
   final TextEditingController _comentarioController = TextEditingController();
   final TextEditingController _latitudController = TextEditingController();
   final TextEditingController _longitudController = TextEditingController();
@@ -36,6 +37,8 @@ class _AddVisitPageState extends State<AddVisitPage> {
   String? _fotoEvidenciaPath;
   String? _notaVozPath;
   String? _token;
+  String? _selectedMotivo;
+  List<VisitType> _visitTypes = []; // Lista de tipos de visita
 
   bool _isRecording = false;
 
@@ -44,6 +47,20 @@ class _AddVisitPageState extends State<AddVisitPage> {
     super.initState();
     _loadToken();
     _requestPermissions();
+    _fetchVisitTypes(); // Cargar los tipos de visitas
+  }
+
+  Future<void> _fetchVisitTypes() async {
+    try {
+      _visitTypes = await VisitTypeService().getVisitTypes(); // Obtener los tipos de visita desde el servicio
+      if (_visitTypes.isNotEmpty) {
+        setState(() {
+          _selectedMotivo = _visitTypes.first.name; // Establecer un motivo predeterminado si la lista no está vacía
+        });
+      }
+    } catch (e) {
+      log("Error al cargar los tipos de visita: $e");
+    }
   }
 
   Future<void> _loadToken() async {
@@ -108,7 +125,7 @@ class _AddVisitPageState extends State<AddVisitPage> {
       Visit visit = Visit(
         cedulaDirector: _cedulaDirectorController.text,
         codigoCentro: _codigoCentroController.text,
-        motivo: _motivoController.text,
+        motivo: _selectedMotivo!,
         fotoEvidencia: _fotoEvidenciaPath!,
         comentario: _comentarioController.text,
         notaVoz: _notaVozPath!,
@@ -183,15 +200,27 @@ class _AddVisitPageState extends State<AddVisitPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  controller: _motivoController,
+                DropdownButtonFormField<String>(
+                  value: _selectedMotivo,
                   decoration: const InputDecoration(labelText: 'Motivo'),
+                  items: _visitTypes.map((VisitType visitType) {
+                    return DropdownMenuItem<String>(
+                      value: visitType.name,
+                      child: Text(visitType.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedMotivo = value;
+                    });
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese el motivo';
+                      return 'Por favor seleccione un motivo';
                     }
                     return null;
                   },
+                  isExpanded: true,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -208,7 +237,7 @@ class _AddVisitPageState extends State<AddVisitPage> {
                 TextFormField(
                   controller: _latitudController,
                   decoration: const InputDecoration(labelText: 'Latitud'),
-                  keyboardType: TextInputType.number,                  
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese la latitud';
