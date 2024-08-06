@@ -3,14 +3,18 @@ class About{
   String nombre;
   String apellido;
   String matricula;
-  String reflexion;
-
 
 About({
   required this.foto,
   required this.nombre,
   required this.apellido,
   required this.matricula,
-  required this.reflexion
 });
 }
+
+About tecnico =  About(
+  foto: 'foto', 
+  nombre: 'Juan', 
+  apellido: 'Lopez', 
+  matricula: '0000-0000', 
+);

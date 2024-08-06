@@ -1,25 +1,20 @@
-
-import '../helpers/database_helper.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/school_model.dart';
 
 class SchoolService {
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
-  
-  Future<int> insertSchool(School school) async {
-    final db = await _databaseHelper.database;
-    return await db.insert('schools', school.toMap());
-  }
+  Future<School?> schoolByCode({required String codigo}) async {
+    final response = await http.get(Uri.parse('https://adamix.net/minerd/minerd/centros.php?regional=*'));
 
-  Future<School?> getSchoolByCode(String code) async {
-    final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'schools',
-      where: 'code = ?',
-      whereArgs: [code],
-    );
-    if (maps.isNotEmpty) {
-      return School.fromMap(maps.first);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      List<dynamic> data = jsonResponse['datos'];
+
+      final schoolMap = { for (var json in data) School.fromJson(json).codigo: School.fromJson(json) };
+      
+      return schoolMap[codigo]; // Buscar la escuela por código
+    } else {
+      throw Exception('Failed to load schools');
     }
-    return null;
   }
 }

@@ -17,7 +17,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
   final GlobalKey<IncidentListState> _incidentListKey = GlobalKey<IncidentListState>();
 
   Future<void> _addIncidentPage() async{
-    NavigationUtils.navigateToPage(context, const AddIncidentPage());
+    await NavigationUtils.navigateToPage(context, const AddIncidentPage());
     _incidentListKey.currentState?.refreshData();
   }
 
@@ -25,7 +25,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 5,
+        toolbarHeight: 10,
         title: const SizedBox.shrink(),
       ),
       body: Padding(
@@ -34,7 +34,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Center(
               child: SizedBox(
@@ -42,7 +42,10 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                 child: Image.network('https://static.wikia.nocookie.net/logopedia/images/c/c3/LogoEducacion2020.1.png')
               ),
             ),
-            IncidentList(key: _incidentListKey,) // Lista de Incidentes...............................................
+            const SizedBox(height: 20.0), // Espacio entre la línea y la lista
+            Expanded(
+              child: IncidentList(key: _incidentListKey,),
+            )
           ],
         ),
       ),

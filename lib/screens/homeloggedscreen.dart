@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../pages/logged/weather_page.dart';
+import '../utils/get_token_util.dart';
 import '../pages/logged/addvisitpage.dart';
-import '../pages/logged/demovideopage.dart';
 import '../pages/logged/director_search.dart';
 import '../pages/logged/horoscopepage.dart';
 import '../pages/logged/newspage.dart';
 import '../pages/logged/school_search.dart';
-import '../pages/logged/visitsmaps.dart';
 import '../pages/logged/visittypes_search.dart';
-import 'homescreen.dart';
 import '../utils/navigation_util.dart';
 import '../widgets/homeloggedpage/bottommenu.dart';
+import '../widgets/homeloggedpage/visitlist.dart';
 
 class HomeLoggedScreen extends StatefulWidget {
   const HomeLoggedScreen({super.key});
@@ -20,41 +19,38 @@ class HomeLoggedScreen extends StatefulWidget {
 }
 
 class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
+  String? _token;
+  final GlobalKey<VisitListState> _visitListKey = GlobalKey<VisitListState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    _token = await TokenUtil.getToken();
+    setState(() {});
+  }
 
   Future<void> _addVisitPage() async {
-    NavigationUtils.navigateToPage(context, const AddVisitPage());
-  }
-
-  Future<void> _logout() async {
-    await _clearUserData();
-
-    // Mostrar el mensaje de sesión cerrada
-    if(mounted){    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Sesión cerrada con éxito'),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddVisitPage(onVisitAdded: _updateVisitList),
       ),
-    );}
-
-    // Redirigir a la página de inicio de sesión después de un pequeño retraso
-    await Future.delayed(const Duration(seconds: 2));
-    if(mounted){
-      NavigationUtils.navigateAndReplace(context, const MyHomeScreen());
-    }
+    );
   }
 
-  Future<void> _clearUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user');
+  Future<void> _updateVisitList() async {
+    _visitListKey.currentState?.refreshData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 5,
+        toolbarHeight: 10,
         title: const SizedBox.shrink(),
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -74,7 +70,7 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
               child: Center(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Image.network('https://static.wikia.nocookie.net/logopedia/images/c/c3/LogoEducacion2020.1.png')
+                  child: Image.network('https://static.wikia.nocookie.net/logopedia/images/c/c3/LogoEducacion2020.1.png'),
                 ),
               ),
             ),
@@ -100,13 +96,6 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.map),
-              title: const Text('Mapa de Visitas'),
-              onTap: () {
-                NavigationUtils.navigateToPage(context, const VisitsMapsPage());
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.newspaper),
               title: const Text('Noticias'),
               onTap: () {
@@ -121,24 +110,17 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.video_library),
-              title: const Text('Video Demostrativo'),
+              leading: const Icon(Icons.cloud),
+              title: const Text('Clima'),
               onTap: () {
-                NavigationUtils.navigateToPage(context, const DemoVideoPage());
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Cerrar Sesión'),
-              onTap: () {
-                _logout(); // Llama al método para cerrar sesión
+                NavigationUtils.navigateToPage(context, const WeatherPage());
               },
             ),
           ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -157,12 +139,10 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'Aquí van las listas de visitas',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              Expanded(
+                child: _token == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : VisitList(key: _visitListKey, token: _token!),
               ),
             ],
           ),
