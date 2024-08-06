@@ -38,6 +38,7 @@ class VisitService {
           List<Visit> visits = (responseData['datos'] as List)
               .map((data) => Visit.fromJson(data))
               .toList();
+          visits = visits.reversed.toList();
           return visits;
         } else {
           throw Exception(responseData['mensaje']);

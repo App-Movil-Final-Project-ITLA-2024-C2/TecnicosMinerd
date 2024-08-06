@@ -11,12 +11,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    // Define los colores que usarás en la aplicación
     var appBarBgColor = Colors.blue[900];
     var appBarTextColor = Colors.white;
     var bodytextColor = Colors.black;
     var bodybgColor = Colors.white;
     var accentColor = Colors.red[900];  
+    var cardColor = Colors.grey[50]; // Color para las cartas
 
     return MaterialApp(
       title: 'Tecnicos MINERD',
@@ -28,12 +29,12 @@ class MyApp extends StatelessWidget {
           backgroundColor: appBarBgColor, 
           iconTheme: IconThemeData(color: accentColor),
           titleTextStyle: const TextStyle(
-            fontFamily: 'Roboto', // Cambia por la fuente deseada
-            fontWeight: FontWeight.w300, // Estilo de fuente fina
-            fontSize: 18, // Tamaño de fuente opcional
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.w300,
+            fontSize: 18,
           ),
         ),
-        iconTheme: IconThemeData(color: appBarTextColor), // Color de los íconos en general
+        iconTheme: IconThemeData(color: appBarTextColor),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: appBarBgColor,
           foregroundColor: appBarTextColor,
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
             backgroundColor: WidgetStateProperty.all(appBarBgColor),
             foregroundColor: WidgetStateProperty.all(appBarTextColor),
           ),
+        ),
+        cardTheme: CardTheme(
+          color: cardColor, // Color de fondo de las cartas
         ),
         useMaterial3: true,
       ),

@@ -11,7 +11,11 @@ class IncidentService {
 
   Future<List<Incident>> getIncidents() async {
     final db = await _databaseHelper.database;
-    final List<Map<String, dynamic>> maps = await db.query('incidents');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'incidents',
+      orderBy: 'id DESC',
+    );
+    
     return List.generate(maps.length, (i) {
       return Incident.fromMap(maps[i]);
     });
