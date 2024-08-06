@@ -1,167 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-void main() {
-  runApp(const MyApp());
-}
+import '../../services/horoscope_service.dart';
+import '../../utils/zodiac_util.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Horóscopo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HoroscopePage(),
-    );
-  }
-}
-
-class HoroscopePage extends StatelessWidget {
+class HoroscopePage extends StatefulWidget {
   const HoroscopePage({super.key});
 
-  final List<String> signs = const [
-    'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
-  ];
+  @override
+  HoroscopePageState createState() => HoroscopePageState();
+}
 
-  final Map<String, String> signImages = const {
-    'Aries': 'assets/images/horoscope/aries.png',
-    'Taurus': 'assets/images/horoscope/taurus.png',
-    'Gemini': 'assets/images/horoscope/gemini.png',
-    'Cancer': 'assets/images/horoscope/cancer.png',
-    'Leo': 'assets/images/horoscope/leo.png',
-    'Virgo': 'assets/images/horoscope/virgo.png',
-    'Libra': 'assets/images/horoscope/libra.png',
-    'Scorpio': 'assets/images/horoscope/scorpio.png',
-    'Sagittarius': 'assets/images/horoscope/sagittarius.png',
-    'Capricorn': 'assets/images/horoscope/capricorn.png',
-    'Aquarius': 'assets/images/horoscope/aquarius.png',
-    'Pisces': 'assets/images/horoscope/pisces.png',
-  };
+class HoroscopePageState extends State<HoroscopePage> {
+  String? _userSign;
+  String? _horoscope;
+  String? _horoscopeDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserHoroscope();
+  }
+
+  Future<void> _fetchUserHoroscope() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userJson = prefs.getString('user');
+      if (userJson != null) {
+        Map<String, dynamic> userMap = jsonDecode(userJson);
+        DateTime birthDate = DateTime.parse(userMap['fecha_nacimiento']);
+        _userSign = ZodiacUtil.getZodiacSign(birthDate);
+
+        if (_userSign != null) {
+          HoroscopeService horoscopeService = HoroscopeService();
+          var data = await horoscopeService.fetchHoroscope(_userSign!.toLowerCase());
+          setState(() {
+            _horoscope = data['horoscope'];
+            _horoscopeDate = data['date'];
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _horoscope = 'Error al obtener el horóscopo';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Horóscopo'),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+        title: Text(
+          'Horospoco del $_horoscopeDate'
         ),
-        itemCount: signs.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () async {
-              String sign = signs[index].toLowerCase();
-              String date = DateTime.now().toIso8601String().split('T')[0];
-              String url = 'https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily?sign=$sign&day=$date';
-
-              final response = await http.get(Uri.parse(url));
-
-              if (response.statusCode == 200) {
-                final data = json.decode(response.body);
-                final horoscopeData = data['data']['horoscope_data'];
-                final horoscopeDate = data['data']['date'];
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HoroscopeDetailPage(
-                      sign: signs[index],
-                      date: horoscopeDate,
-                      horoscope: horoscopeData,
-                      imageUrl: signImages[signs[index]]!,
+      ),
+      body: _horoscope == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 15),
+                  Center(
+                    child: Text(
+                      'Horóscopo de $_userSign',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                );
-              } else {
-                // Handle error
-              }
-            },
-            child: Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    signs[index],
-                    style: const TextStyle(fontSize: 20),
+                  const SizedBox(height: 25),
+                  Center(
+                    child: Text(
+                      _horoscope ?? '',
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  ClipOval(
-                    child: Image.asset(
-                      signImages[signs[index]]!,
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
+                  const SizedBox(height: 25),
+                  Center(
+                    child: ClipOval(
+                      child: Image.asset(
+                        ZodiacUtil.signImages[_userSign!]!,
+                        height: 200,
+                        width: 200,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class HoroscopeDetailPage extends StatelessWidget {
-  final String sign;
-  final String date;
-  final String horoscope;
-  final String imageUrl;
-
-  const HoroscopeDetailPage({
-    super.key,
-    required this.sign,
-    required this.date,
-    required this.horoscope,
-    required this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Horóscopo de $sign'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              date,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              horoscope,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: ClipOval(
-                child: Image.asset(
-                  imageUrl,
-                  height: 250,
-                  width: 250,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -12,12 +12,14 @@ class DeletePage extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SecurityPage(),
+      home: const SecurityPage(),
     );
   }
 }
 
 class SecurityPage extends StatelessWidget {
+  const SecurityPage({super.key});
+
   void _showDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -51,7 +53,7 @@ class SecurityPage extends StatelessWidget {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -63,14 +65,14 @@ class SecurityPage extends StatelessWidget {
                       Navigator.of(context).pop(); // Cierra el diálogo
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => LoadingPage(),
+                          builder: (context) => const LoadingPage(),
                         ),
                       );
                     },
-                    child: Text('Aceptar'),
+                    child: const Text('Aceptar'),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -81,7 +83,7 @@ class SecurityPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancelar'),
+                    child: const Text('Cancelar'),
                   ),
                 ),
               ],
@@ -101,7 +103,7 @@ class SecurityPage extends StatelessWidget {
           // Fondo
           Positioned.fill(
             child: Container(
-              color: Color.fromARGB(255, 255, 255, 255),
+              color: const Color.fromARGB(255, 255, 255, 255),
               child: GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -112,7 +114,7 @@ class SecurityPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Icon(
                     Icons.warning,
-                    color: Color.fromARGB(255, 7, 93, 221).withOpacity(0.1),
+                    color: const Color.fromARGB(255, 7, 93, 221).withOpacity(0.1),
                   );
                 },
                 itemCount: 140,
@@ -369,7 +371,7 @@ class SecurityPage extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Color.fromARGB(255, 150, 146, 146), // Color del texto
+                  backgroundColor: const Color.fromARGB(255, 150, 146, 146), // Color del texto
                 ),
                 onPressed: () => _showDeleteDialog(context),
                 child: const Text('Borrar Registros'),
@@ -383,11 +385,13 @@ class SecurityPage extends StatelessWidget {
 }
 
 class LoadingPage extends StatefulWidget {
+  const LoadingPage({super.key});
+
   @override
-  _LoadingPageState createState() => _LoadingPageState();
+  LoadingPageState createState() => LoadingPageState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class LoadingPageState extends State<LoadingPage> {
   double _progress = 0;
   String _loadingText = 'Borrando registros';
 
@@ -400,17 +404,18 @@ class _LoadingPageState extends State<LoadingPage> {
 
   void _startLoading() async {
     for (double i = 0; i <= 100; i++) {
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       setState(() {
         _progress = i;
       });
     }
-    // Regresar a la página inicial
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    if(mounted){
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
   }
 
   void _startLoadingTextAnimation() {
-    Timer.periodic(Duration(milliseconds: 500), (timer) {
+    Timer.periodic(const Duration(milliseconds: 500), (timer) {
       if (mounted) {
         setState(() {
           if (_loadingText.endsWith('...')) {
@@ -433,17 +438,17 @@ class _LoadingPageState extends State<LoadingPage> {
           children: [
             Text(
               _loadingText,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             CircularProgressIndicator(
               value: _progress / 100,
               strokeWidth: 8,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               '${_progress.toStringAsFixed(0)}%',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ],
         ),
