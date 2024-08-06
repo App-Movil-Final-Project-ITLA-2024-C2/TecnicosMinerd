@@ -57,7 +57,7 @@ class NewsPageState extends State<NewsPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ListView.separated(
-              itemCount: 5, // Number of shimmer items to show
+              itemCount: 5, 
               itemBuilder: (context, index) => const ShimmerItem(),
               separatorBuilder: (context, index) => const Divider(
                 color: Colors.grey,
@@ -109,7 +109,7 @@ class NewsPageState extends State<NewsPage> {
                         const SizedBox(height: 8.0),
                         Padding(
                           padding: const EdgeInsets.only(
-                              left: 48.0), // Ajusta el padding aquí
+                              left: 48.0), 
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
