@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tecnicos_minerd/utils/get_token_util.dart';
+import '../pages/logged/weather_page.dart';
+import '../utils/get_token_util.dart';
 import '../pages/logged/addvisitpage.dart';
 import '../pages/logged/director_search.dart';
 import '../pages/logged/horoscopepage.dart';
@@ -19,6 +20,7 @@ class HomeLoggedScreen extends StatefulWidget {
 
 class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
   String? _token;
+  final GlobalKey<VisitListState> _visitListKey = GlobalKey<VisitListState>();
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
   }
 
   Future<void> _updateVisitList() async {
-    setState(() {});
+    _visitListKey.currentState?.refreshData();
   }
 
   @override
@@ -107,11 +109,18 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
                 NavigationUtils.navigateToPage(context, const HoroscopePage());
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.cloud),
+              title: const Text('Clima'),
+              onTap: () {
+                NavigationUtils.navigateToPage(context, const WeatherPage());
+              },
+            ),
           ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -133,7 +142,7 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
               Expanded(
                 child: _token == null
                     ? const Center(child: CircularProgressIndicator())
-                    : VisitList(token: _token!),
+                    : VisitList(key: _visitListKey, token: _token!),
               ),
             ],
           ),
