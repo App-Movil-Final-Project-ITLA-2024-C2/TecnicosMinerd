@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tecnicos_minerd/utils/get_token_util.dart';
 
 import '../../pages/logged/demovideopage.dart';
 import '../../pages/logged/visitsmaps.dart';
@@ -37,8 +38,20 @@ class BottomMenu extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.map),
-            onPressed: () {
-              NavigationUtils.navigateToPage(context, const VisitsMapsPage());
+            onPressed: () async {
+              String? token = await TokenUtil.getToken();
+              if (token != null) {
+                if (context.mounted)NavigationUtils.navigateToPage(context, VisitsMapPage(token: token));
+              } else {
+                if (context.mounted){ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Error: No se pudo obtener el token.'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                }
+              }
             },
           ),
            IconButton(
