@@ -78,35 +78,35 @@ class _HomeLoggedScreenState extends State<HomeLoggedScreen> {
               leading: const Icon(Icons.business),
               title: const Text('Tipos de Visitas'),
               onTap: () {
-                NavigationUtils.navigateToPage(context, VisitTypesPage());
+                NavigationUtils.navigateToPage(context, const VisitTypesPage());
               },
             ),
             ListTile(
               leading: const Icon(Icons.search),
               title: const Text('Escuela por Código'),
               onTap: () {
-                NavigationUtils.navigateToPage(context, SearchSchoolPage());
+                NavigationUtils.navigateToPage(context, const SearchSchoolPage());
               },
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Director por Código'),
               onTap: () {
-                NavigationUtils.navigateToPage(context, SearchDirectorPage());
+                NavigationUtils.navigateToPage(context, const SearchDirectorPage());
               },
             ),
             ListTile(
               leading: const Icon(Icons.newspaper),
               title: const Text('Noticias'),
               onTap: () {
-                NavigationUtils.navigateToPage(context, NewsPage());
+                NavigationUtils.navigateToPage(context, const NewsPage());
               },
             ),
             ListTile(
               leading: const Icon(Icons.star),
               title: const Text('Horóscopo'),
               onTap: () {
-                NavigationUtils.navigateToPage(context, HoroscopePage());
+                NavigationUtils.navigateToPage(context, const HoroscopePage());
               },
             ),
             ListTile(
