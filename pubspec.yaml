@@ -53,6 +53,7 @@ dependencies:
   geocoding: ^2.0.0
   geolocator: ^8.0.0
   google_maps_flutter: ^2.7.1
+  youtube_player_flutter: ^9.0.1
 
 dev_dependencies:
   flutter_test:
