@@ -48,6 +48,7 @@ class VisitsMapPageState extends State<VisitsMapPage> {
         }
       });
     } catch (e) {
+      // Errores
     }
   }
 
